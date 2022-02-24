@@ -9,9 +9,7 @@ import com.sparta.magazine.model.User;
 import com.sparta.magazine.repository.BoardRepository;
 import com.sparta.magazine.repository.LikelistRepository;
 import com.sparta.magazine.repository.UserRepository;
-import com.sparta.magazine.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

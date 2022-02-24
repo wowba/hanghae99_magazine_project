@@ -3,6 +3,7 @@ package com.sparta.magazine.api;
 import com.sparta.magazine.dto.UserRequestDto;
 import com.sparta.magazine.jwt.JwtTokenProvider;
 import com.sparta.magazine.model.User;
+import com.sparta.magazine.model.responseEntity.LoginSuccess;
 import com.sparta.magazine.model.responseEntity.Success;
 import com.sparta.magazine.repository.UserRepository;
 import com.sparta.magazine.service.UserService;
@@ -41,14 +42,16 @@ public class UserRestController {
 
     // 로그인
     @PostMapping("/api/login")
-    public String login(@RequestBody Map<String, String> user) {
+    public ResponseEntity<LoginSuccess> loginUser(@RequestBody Map<String, String> user) {
         User member = userRepository.findByEmail(user.get("username"))
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
         if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
             throw new IllegalArgumentException("잘못된 비밀번호입니다.");
         }
-        return jwtTokenProvider.createToken(member.getUsername(), member.getRoles());
+        String token = jwtTokenProvider.createToken(member.getUsername(), member.getRoles());
+        return new ResponseEntity<>(new LoginSuccess("success", "로그인 성공", token), HttpStatus.OK);
     }
+
 
     // 유저 삭제하기(연관관계 테스트용 기능 / 좋아요 <- 게시판 <- 유저)
     @DeleteMapping("/api/register/{id}")
