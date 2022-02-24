@@ -7,9 +7,11 @@ import com.sparta.magazine.model.responseEntity.GetMultiBoard;
 import com.sparta.magazine.model.responseEntity.GetSingleBoard;
 import com.sparta.magazine.security.UserDetailsImpl;
 import com.sparta.magazine.service.BoardService;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +40,7 @@ public class BoardRestController {
     }
 
     // 게시판 생성하기
+    @ApiOperation(value = "회원 리스트 조회", notes = "모든 회원을 조회한다")
     @PostMapping("/api/board")
     public ResponseEntity<BoardSuccess> createBoard(@RequestBody BoardRequestDto boardRequestDto) {
 
