@@ -1,5 +1,7 @@
 package com.sparta.magazine.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sparta.magazine.dto.BoardRequestDto;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,13 +33,15 @@ public class Board extends Timestamped{
 
     @Column
     private String content;
-//    @ManyToOne
+
+    @JsonManagedReference
     @ManyToOne // 게시글은 여러개, 계정은 하나. 게시글은 곧 연관관계의 주인!
     @JoinColumn(name = "user_id")
     private User user;
 
     // failed to lazily initialize a collection of role
     // 위와 같은 문제를 급하게 해결하기 위해 EAGER를 썼지만, 추후 리팩토링 예정.
+    @JsonBackReference
     @OneToMany(mappedBy = "board", cascade = {CascadeType.ALL})
     private List<Likelist> likeList = new ArrayList<>();
 

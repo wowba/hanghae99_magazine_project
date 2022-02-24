@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -51,6 +52,7 @@ public class UserService {
                 .email(userRequestDto.getEmail())
                 .username(userRequestDto.getUsername())
                 .password(password)
+                .roles(Collections.singletonList("ROLE_USER")) // 최초 가입시 USER 로 설정
                 .build();
 
         // 이메일 중복 확인

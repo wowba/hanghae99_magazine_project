@@ -1,5 +1,6 @@
 package com.sparta.magazine.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,11 +22,13 @@ public class Likelist {
 //    @ManyToOne
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonManagedReference
     private User user;
 
 //    @ManyToOne
     @ManyToOne
     @JoinColumn(name = "board_id")
+    @JsonManagedReference
     private Board board;
     
     // 좋아요 생성자

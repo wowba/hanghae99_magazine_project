@@ -34,6 +34,9 @@ dependencies {
     // 개끌 스웨거. 스프링부트 2.4.0 과 사용 요망.
     implementation "io.springfox:springfox-boot-starter:3.0.0"
     implementation "io.springfox:springfox-swagger-ui:3.0.0"
+
+    // JWT 토큰을 발행하고 검증하는 모듈
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
 }
 
 tasks.named('test') {

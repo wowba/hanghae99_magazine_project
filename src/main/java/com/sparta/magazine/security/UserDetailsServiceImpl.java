@@ -18,8 +18,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // 우리는 email로 로그인을 하므로 username으로 들어온 email을 기반으로 해 찾아야 한다.
         // 즉 여기서의 username은 유저가 입력한 이메일이다.
         // username 이라고 변수명을 쓰는건 스프링 시큐리티와의 약속이라 어쩔 수 없다.
-        User user = userRepository.findByEmail(username)
+//        User user = userRepository.findByEmail(username)
+//                .orElseThrow(() -> new UsernameNotFoundException("Can't find " + username));
+//        return new UserDetailsImpl(user);
+
+        return (UserDetails) userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Can't find " + username));
-        return new UserDetailsImpl(user);
     }
 }
