@@ -36,7 +36,8 @@ public class User extends Timestamped {
     @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL})
     private List<Board> boardList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL})
+//    @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL})
     private List<Likelist> likeList = new ArrayList<>();
 
     // 게시글 생성자

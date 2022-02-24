@@ -69,6 +69,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     // 어떤 요청이든 '인증 시도'
                     .anyRequest().authenticated()
                 .and()
+                    // CORS 설정 파일은 WebConfig!!
+                    .cors()
+                .and()
                 // 로그인 기능 허용
                     .formLogin()
                     // 로그인 뷰 제공 (GET /user/login)

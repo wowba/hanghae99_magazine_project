@@ -15,13 +15,15 @@ import javax.transaction.Transactional;
 public class Likelist {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+//    @ManyToOne
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+//    @ManyToOne
     @ManyToOne
     @JoinColumn(name = "board_id")
     private Board board;

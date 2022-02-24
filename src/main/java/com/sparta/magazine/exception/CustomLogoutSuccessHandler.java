@@ -22,7 +22,6 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
         data.put("result", "success");
         data.put("msg", "로그아웃 성공");
 
-//        response.getOutputStream().println(objectMapper.writeValueAsString(data));
         response.setContentType("text/html; charset=UTF-8"); // 보낼 때 한글 인코딩
         response.setCharacterEncoding("UTF-8");
         ServletOutputStream out = response.getOutputStream();

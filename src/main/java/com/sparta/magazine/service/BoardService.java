@@ -109,36 +109,33 @@ public class BoardService {
     @Transactional
     public Long createBoard(BoardRequestDto boardRequestDto) {
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserDetailsImpl userDetails = (UserDetailsImpl)principal;
-        String username = userDetails.getUser().getUsername();
-
         // 게시판 빌더 생성
         Board board = Board.builder()
-                    .username(username)
+                    .username(boardRequestDto.getUsername())
                     .imageUrl(boardRequestDto.getImageUrl())
                     .grid(boardRequestDto.getGrid())
                     .content(boardRequestDto.getContent())
                     .build();
         // imageUrl 존재하는지 확인 - 프론트와 협의 후 추가예정
 
-        // 게시글을 만드려는 유저가 존재하는지 확인 --> 생각해보니 로그인 체크 앞에서 함.
-//        usernameIsExist(boardRequestDto.getUsername());
+        // 게시글을 만드려는 유저가 존재하는지 확인
+        usernameIsExist(boardRequestDto.getUsername());
         // 연관관계 편의 메소드
-        User user = userRepository.findUserByUsername(userDetails.getUser().getUsername());
+        User user = userRepository.findUserByUsername(boardRequestDto.getUsername());
         board.SetUser(user);
         // 게시판 저장하기
         boardRepository.save(board);
 
         return board.getId();
     }
-//    // 게시글을 생성하려는 유저가 존재하는지 확인 --> 일단 무의미한 기능.
-//    private void usernameIsExist(String username) {
-//        Optional<User> findUsername = userRepository.findByUsername(username);
-//        if(!findUsername.isPresent()){
-//            throw new IllegalArgumentException("게시글을 만드려는 회원은 존재하지 않습니다.");
-//        }
-//    }
+
+    // 게시글을 생성하려는 유저가 존재하는지 확인
+    private void usernameIsExist(String username) {
+        Optional<User> findUsername = userRepository.findByUsername(username);
+        if(!findUsername.isPresent()){
+            throw new IllegalArgumentException("게시글을 만드려는 회원은 존재하지 않습니다.");
+        }
+    }
 
     // imageUrl 존재하는지 확인 (프론트와 협의 후 기능 추가 예정) 
     private void imageUrlIsExist(Board board) {
@@ -151,13 +148,13 @@ public class BoardService {
     @Transactional
     public void editBoard(Long id, BoardRequestDto boardRequestDto) {
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("유저를 조회할 수 없습니다."));
 
-        UserDetailsImpl userDetails = (UserDetailsImpl)principal;
-
-        if(!Objects.equals(boardRequestDto.getUsername(), userDetails.getUser().getUsername())){
+        if(!Objects.equals(boardRequestDto.getUsername(), user.getUsername())){
             throw new IllegalArgumentException("게시글의 생성자만 글을 수정할 수 있습니다.");
         }
+
         Board board = boardRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("수정하려는 해당 게시글(" + id + ")이 존재하지 않습니다."));
         board.Edit(boardRequestDto);
@@ -167,16 +164,11 @@ public class BoardService {
     @Transactional
     public void deleteBoard(Long id) {
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        UserDetailsImpl userDetails = (UserDetailsImpl)principal;
-
         Board board = boardRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("삭제하려는 해당 게시글(" + id + ")이 존재하지 않습니다."));
 
-        if(!Objects.equals(board.getUsername(), userDetails.getUser().getUsername())){
-            throw new IllegalArgumentException("게시글의 생성자만 글을 수정할 수 있습니다.");
-        }
+        // 유저 정보를 받아와서 삭제를 제한할 수 있는 기능이 필요하다.
+
         boardRepository.deleteById(id);
     }
 }

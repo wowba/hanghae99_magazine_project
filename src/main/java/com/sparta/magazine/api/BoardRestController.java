@@ -41,12 +41,6 @@ public class BoardRestController {
     @PostMapping("/api/board")
     public ResponseEntity<BoardSuccess> createBoard(@RequestBody BoardRequestDto boardRequestDto) {
 
-        // 로그인 유무 체크
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (Objects.equals(principal.toString(), "anonymousUser")){
-            throw new IllegalArgumentException("로그인이 필요한 서비스입니다.");
-        }
-
         Long id = boardService.createBoard(boardRequestDto);
         return new ResponseEntity<>(new BoardSuccess("success", "게시판 생성 성공.", id), HttpStatus.OK);
     }
@@ -55,12 +49,6 @@ public class BoardRestController {
     @PutMapping("/api/board/{id}")
     public ResponseEntity<BoardSuccess> editBoard(@PathVariable Long id, @RequestBody BoardRequestDto boardRequestDto) {
 
-        // 로그인 유무 체크
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (Objects.equals(principal.toString(), "anonymousUser")){
-            throw new IllegalArgumentException("로그인이 필요한 서비스입니다.");
-        }
-
         boardService.editBoard(id, boardRequestDto);
         return new ResponseEntity<>(new BoardSuccess("success", "해당 게시판(" + id +")이 수정 되었습니다.", id), HttpStatus.OK);
     }
@@ -68,12 +56,6 @@ public class BoardRestController {
     // 게시판 삭제하기
     @DeleteMapping("/api/board/{id}")
     public ResponseEntity<BoardSuccess> deleteBoard(@PathVariable Long id){
-
-        // 로그인 유무 체크
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (Objects.equals(principal.toString(), "anonymousUser")){
-            throw new IllegalArgumentException("로그인이 필요한 서비스입니다.");
-        }
 
         boardService.deleteBoard(id);
         return new ResponseEntity<>(new BoardSuccess("success", "해당 게시판(" + id +")이 삭제 되었습니다.", id), HttpStatus.OK);

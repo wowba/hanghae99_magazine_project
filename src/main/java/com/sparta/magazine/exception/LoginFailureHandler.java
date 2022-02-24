@@ -1,7 +1,6 @@
 package com.sparta.magazine.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.security.authentication.*;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
@@ -25,7 +24,6 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
         data.put("result", "fail");
         data.put("msg", "로그인 실패");
 
-//        response.getOutputStream().println(objectMapper.writeValueAsString(data));
         response.setContentType("text/html; charset=UTF-8"); // 보낼 때 한글 인코딩
         response.setCharacterEncoding("UTF-8");
         ServletOutputStream out = response.getOutputStream();
