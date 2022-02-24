@@ -109,17 +109,21 @@ public class BoardService {
     @Transactional
     public Long createBoard(BoardRequestDto boardRequestDto) {
 
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetailsImpl userDetails = (UserDetailsImpl)principal;
+        String username = userDetails.getUser().getUsername();
+
         // 게시판 빌더 생성
         Board board = Board.builder()
-                    .username(boardRequestDto.getUsername())
+                    .username(username)
                     .imageUrl(boardRequestDto.getImageUrl())
                     .grid(boardRequestDto.getGrid())
                     .content(boardRequestDto.getContent())
                     .build();
         // imageUrl 존재하는지 확인 - 프론트와 협의 후 추가예정
 
-        // 게시글을 만드려는 유저가 존재하는지 확인
-        usernameIsExist(boardRequestDto.getUsername());
+        // 게시글을 만드려는 유저가 존재하는지 확인 --> 생각해보니 로그인 체크 앞에서 함.
+//        usernameIsExist(boardRequestDto.getUsername());
         // 연관관계 편의 메소드
         User user = userRepository.findUserByUsername(boardRequestDto.getUsername());
         board.SetUser(user);
@@ -128,13 +132,13 @@ public class BoardService {
 
         return board.getId();
     }
-    // 게시글을 생성하려는 유저가 존재하는지 확인
-    private void usernameIsExist(String username) {
-        Optional<User> findUsername = userRepository.findByUsername(username);
-        if(!findUsername.isPresent()){
-            throw new IllegalArgumentException("게시글을 만드려는 회원은 존재하지 않습니다.");
-        }
-    }
+//    // 게시글을 생성하려는 유저가 존재하는지 확인 --> 일단 무의미한 기능.
+//    private void usernameIsExist(String username) {
+//        Optional<User> findUsername = userRepository.findByUsername(username);
+//        if(!findUsername.isPresent()){
+//            throw new IllegalArgumentException("게시글을 만드려는 회원은 존재하지 않습니다.");
+//        }
+//    }
 
     // imageUrl 존재하는지 확인 (프론트와 협의 후 기능 추가 예정) 
     private void imageUrlIsExist(Board board) {

@@ -45,6 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
         http.authorizeRequests()
+
                     // 회원 관리 처리 API 전부를 login 없이 허용 - 테스트용
                     .antMatchers("/user/**").permitAll()
 
@@ -65,7 +66,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/webjars/**").permitAll()
                     .antMatchers("/v2/api-docs").permitAll()
 
-                    // 어떤 요청이든 '인증'
+                    // 어떤 요청이든 '인증 시도'
                     .anyRequest().authenticated()
                 .and()
                 // 로그인 기능 허용
