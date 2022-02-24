@@ -17,19 +17,19 @@ public class UserRestController {
 
     private final UserService userService;
 
-//    // 유저 생성하기 (JSON)
-//    @PostMapping("/api/register")
-//    public ResponseEntity<UserSuccess> createUser(@RequestBody UserRequestDto userRequestDto){
-//        userService.createUser(userRequestDto);
-//        return new ResponseEntity<>(new UserSuccess("success", "회원 가입 성공하였습니다."), HttpStatus.OK);
-//    }
-
-    // 유저 생성하기 (Form DATA)
+    // 유저 생성하기 (JSON)
     @PostMapping("/api/register")
-    public ResponseEntity<Success> createUser(UserRequestDto userRequestDto){
+    public ResponseEntity<Success> createUser(@RequestBody UserRequestDto userRequestDto){
         userService.createUser(userRequestDto);
         return new ResponseEntity<>(new Success("success", "회원 가입 성공하였습니다."), HttpStatus.OK);
     }
+
+//    // 유저 생성하기 (Form DATA)
+//    @PostMapping("/api/register")
+//    public ResponseEntity<Success> createUser(UserRequestDto userRequestDto){
+//        userService.createUser(userRequestDto);
+//        return new ResponseEntity<>(new Success("success", "회원 가입 성공하였습니다."), HttpStatus.OK);
+//    }
 
     // 로그인페이지 이동시 로그인 유무 판별 (prinicpal 활용)
 //    @GetMapping ("/user/login")
