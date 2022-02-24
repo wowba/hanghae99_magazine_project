@@ -125,7 +125,7 @@ public class BoardService {
         // 게시글을 만드려는 유저가 존재하는지 확인 --> 생각해보니 로그인 체크 앞에서 함.
 //        usernameIsExist(boardRequestDto.getUsername());
         // 연관관계 편의 메소드
-        User user = userRepository.findUserByUsername(boardRequestDto.getUsername());
+        User user = userRepository.findUserByUsername(userDetails.getUser().getUsername());
         board.SetUser(user);
         // 게시판 저장하기
         boardRepository.save(board);
