@@ -11,5 +11,4 @@ public class MagazineApplication {
     public static void main(String[] args) {
         SpringApplication.run(MagazineApplication.class, args);
     }
-
 }
