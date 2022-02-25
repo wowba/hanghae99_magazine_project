@@ -23,9 +23,6 @@ import java.util.Map;
 public class UserRestController {
 
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final UserRepository userRepository;
 
     // 유저 생성하기 (JSON)
     @PostMapping("/api/register")

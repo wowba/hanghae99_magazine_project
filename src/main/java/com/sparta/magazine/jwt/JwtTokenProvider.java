@@ -25,7 +25,7 @@ public class JwtTokenProvider {
     // 시크릿 키. 실전에는 따로 환경변수 파일을 만들어서 보안을 생각하자.
     private String secretKey = "backendisking";
 
-    // 토큰 유효시간 30분
+    // 토큰 유효시간 30분 / 분, 초, 미리초
     private long tokenValidTime = 30 * 60 * 1000L;
 
     private final UserDetailsService userDetailsService;
@@ -72,8 +72,8 @@ public class JwtTokenProvider {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (Exception e) {
+            System.out.println(e.getClass());
             return false;
         }
     }
-
 }

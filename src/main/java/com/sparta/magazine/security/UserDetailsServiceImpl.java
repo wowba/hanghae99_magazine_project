@@ -1,6 +1,5 @@
 package com.sparta.magazine.security;
 
-import com.sparta.magazine.model.User;
 import com.sparta.magazine.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +21,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 //                .orElseThrow(() -> new UsernameNotFoundException("Can't find " + username));
 //        return new UserDetailsImpl(user);
 
-        return (UserDetails) userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Can't find " + username));
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("해당 유저를 찾을 수 없습니다."));
     }
 }
