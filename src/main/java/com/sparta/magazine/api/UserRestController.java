@@ -50,7 +50,6 @@ public class UserRestController {
         return new ResponseEntity<>(new LoginSuccess("success", "로그인 성공", token), HttpStatus.OK);
     }
 
-
     // 유저 삭제하기(연관관계 테스트용 기능 / 좋아요 <- 게시판 <- 유저)
     @DeleteMapping("/api/register/{id}")
     public ResponseEntity<Success> deleteUser(@PathVariable Long id){

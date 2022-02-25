@@ -22,7 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 //                .orElseThrow(() -> new UsernameNotFoundException("Can't find " + username));
 //        return new UserDetailsImpl(user);
 
-        return (UserDetails) userRepository.findByEmail(username)
+        return (UserDetails) userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Can't find " + username));
     }
 }

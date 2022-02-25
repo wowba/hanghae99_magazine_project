@@ -5,22 +5,16 @@ import com.sparta.magazine.dto.BoardResponseDto;
 import com.sparta.magazine.model.responseEntity.BoardSuccess;
 import com.sparta.magazine.model.responseEntity.GetMultiBoard;
 import com.sparta.magazine.model.responseEntity.GetSingleBoard;
-import com.sparta.magazine.security.UserDetailsImpl;
 import com.sparta.magazine.service.BoardService;
-import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 
-@RestController
 @RequiredArgsConstructor
+@RestController
 public class BoardRestController {
 
     private final BoardService boardService;
@@ -40,10 +34,8 @@ public class BoardRestController {
     }
 
     // 게시판 생성하기
-    @ApiOperation(value = "회원 리스트 조회", notes = "모든 회원을 조회한다")
     @PostMapping("/api/board")
     public ResponseEntity<BoardSuccess> createBoard(@RequestBody BoardRequestDto boardRequestDto) {
-
         Long id = boardService.createBoard(boardRequestDto);
         return new ResponseEntity<>(new BoardSuccess("success", "게시판 생성 성공.", id), HttpStatus.OK);
     }
@@ -51,7 +43,6 @@ public class BoardRestController {
     // 게시판 수정하기
     @PutMapping("/api/board/{id}")
     public ResponseEntity<BoardSuccess> editBoard(@PathVariable Long id, @RequestBody BoardRequestDto boardRequestDto) {
-
         boardService.editBoard(id, boardRequestDto);
         return new ResponseEntity<>(new BoardSuccess("success", "해당 게시판(" + id +")이 수정 되었습니다.", id), HttpStatus.OK);
     }
@@ -59,7 +50,6 @@ public class BoardRestController {
     // 게시판 삭제하기
     @DeleteMapping("/api/board/{id}")
     public ResponseEntity<BoardSuccess> deleteBoard(@PathVariable Long id){
-
         boardService.deleteBoard(id);
         return new ResponseEntity<>(new BoardSuccess("success", "해당 게시판(" + id +")이 삭제 되었습니다.", id), HttpStatus.OK);
     }
