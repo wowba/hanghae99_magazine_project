@@ -1,5 +1,6 @@
 package com.sparta.magazine.model.responseEntity;
 
+import com.sparta.magazine.dto.UserResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,5 +11,5 @@ import lombok.NoArgsConstructor;
 public class LoginSuccess {
     private String result;
     private String msg;
-    private String token;
+    private UserResponseDto userData;
 }

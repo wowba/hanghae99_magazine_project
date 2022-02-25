@@ -1,15 +1,18 @@
 package com.sparta.magazine.api;
 
 import com.sparta.magazine.dto.UserRequestDto;
+import com.sparta.magazine.dto.UserResponseDto;
 import com.sparta.magazine.jwt.JwtTokenProvider;
 import com.sparta.magazine.model.User;
 import com.sparta.magazine.model.responseEntity.LoginSuccess;
 import com.sparta.magazine.model.responseEntity.Success;
 import com.sparta.magazine.repository.UserRepository;
 import com.sparta.magazine.service.UserService;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,14 +44,13 @@ public class UserRestController {
     // 로그인
     @PostMapping("/api/login")
     public ResponseEntity<LoginSuccess> loginUser(@RequestBody Map<String, String> user) {
-        String token = userService.loginUser(user);
-        return new ResponseEntity<>(new LoginSuccess("success", "로그인 성공", token), HttpStatus.OK);
+        UserResponseDto userData = userService.loginUser(user);
+        return new ResponseEntity<>(new LoginSuccess("success", "로그인 성공", userData), HttpStatus.OK);
     }
 
     // 유저 삭제하기(연관관계 테스트용 기능 / 좋아요 <- 게시판 <- 유저)
     @DeleteMapping("/api/register/{id}")
     public ResponseEntity<Success> deleteUser(@PathVariable Long id){
-
         userService.deleteUser(id);
         return new ResponseEntity<>(new Success("success", "회원 삭제 완료."), HttpStatus.OK);
     }

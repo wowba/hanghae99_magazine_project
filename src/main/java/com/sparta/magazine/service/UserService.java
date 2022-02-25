@@ -1,6 +1,7 @@
 package com.sparta.magazine.service;
 
 import com.sparta.magazine.dto.UserRequestDto;
+import com.sparta.magazine.dto.UserResponseDto;
 import com.sparta.magazine.jwt.JwtTokenProvider;
 import com.sparta.magazine.model.User;
 import com.sparta.magazine.repository.UserRepository;
@@ -85,13 +86,19 @@ public class UserService {
     }
 
     // 로그인
-    public String loginUser(@RequestBody Map<String, String> user) {
-        User member = userRepository.findByEmail(user.get("username"))
+    public UserResponseDto loginUser(@RequestBody Map<String, String> user) {
+        User member = userRepository.findByEmail(user.get("email"))
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
         if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
             throw new IllegalArgumentException("잘못된 비밀번호입니다.");
         }
-        return jwtTokenProvider.createToken(member.getUsername(), member.getRoles(), member.getEmail());
+        UserResponseDto userResponseDto = UserResponseDto.builder()
+                                .email(member.getEmail())
+                                .username(member.getUsername())
+                                .userId(member.getId())
+                                .token(jwtTokenProvider.createToken(member.getUsername(), member.getRoles()))
+                                .build();
+        return userResponseDto;
     }
 
     // 회원 삭제
