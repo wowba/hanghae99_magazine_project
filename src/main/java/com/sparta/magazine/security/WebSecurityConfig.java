@@ -43,7 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public BCryptPasswordEncoder encodePassword() {
         return new BCryptPasswordEncoder();
     }
-//
+
     // authenticationManager를 Bean 등록하기.
     @Bean
     @Override
