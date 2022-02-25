@@ -40,9 +40,6 @@ public class User extends Timestamped implements UserDetails {
     private List<String> roles = new ArrayList<>();
 
     // 양방향 연관관계시 객체의 참조는 둘인데 외래 키는 하나이므로 외래키를 관리할 주인을 정해야 한다.
-
-    // failed to lazily initialize a collection of role
-    // 위와 같은 문제를 급하게 해결하기 위해 EAGER를 썼지만, 추후 리팩토링 예정.
     @JsonBackReference
     @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL})
     private List<Board> boardList = new ArrayList<>();

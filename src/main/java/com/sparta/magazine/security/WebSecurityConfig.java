@@ -1,5 +1,7 @@
 package com.sparta.magazine.security;
 
+import com.sparta.magazine.exception.CustomAccessDeniedHandler;
+import com.sparta.magazine.exception.CustomAuthenticationEntryPoint;
 import com.sparta.magazine.jwt.JwtAuthenticationFilter;
 import com.sparta.magazine.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +36,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     // 토근 생성 및 제공자 DI.
     private final JwtTokenProvider jwtTokenProvider;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean // 비밀번호 암호화 해서 저장하는 Bean 등록하기.
     public BCryptPasswordEncoder encodePassword() {
@@ -59,6 +63,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     // CORS 설정 파일은 WebConfig!!
                     .cors()
                 .and()
+//                     403, 401 에러 핸들링 테스트중
+//                    .exceptionHandling()
+//                    .authenticationEntryPoint(customAuthenticationEntryPoint) // 401 에러 핸들러
+//                    .accessDeniedHandler(customAccessDeniedHandler) // 403 에러 핸들러 <- 동작하지 않는다?
+//                .and()
+                
                     .authorizeRequests() // 요청에 대한 사용권한 체크
 //                    .antMatchers("/admin/**").hasRole("ADMIN")
 
@@ -71,8 +81,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                     .anyRequest().permitAll() // 그외 나머지 요청은 누구나 접근 가능
                 .and()
-                    .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
-                    UsernamePasswordAuthenticationFilter.class);
-        // JwtAuthenticationFilter를 UsernamePasswordAuthenticationFilter 전에 넣는다
+                    .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+
+                    // JwtAuthenticationFilter를 UsernamePasswordAuthenticationFilter 전에 넣는다
     }
 }

@@ -23,5 +23,12 @@ class UserTest {
         List<Board> boardList = new ArrayList<>();
 
         List<Likelist> likeList = new ArrayList<>();
+
+        User user = User.builder()
+                .email(email)
+                .username(username)
+                .password(password)
+                .boardList(boardList)
+                .likeList(likeList).build();
     }
 }
