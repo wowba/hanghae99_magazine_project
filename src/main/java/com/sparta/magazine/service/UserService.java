@@ -1,14 +1,17 @@
 package com.sparta.magazine.service;
 
 import com.sparta.magazine.dto.UserRequestDto;
+import com.sparta.magazine.jwt.JwtTokenProvider;
 import com.sparta.magazine.model.User;
 import com.sparta.magazine.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.transaction.Transactional;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -21,6 +24,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     // 유저 저장소
     private final UserRepository userRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     // 회원가입
     @Transactional
@@ -79,7 +83,17 @@ public class UserService {
             throw new IllegalArgumentException("이미 존재하는 회원입니다.");
         }
     }
-    
+
+    // 로그인
+    public String loginUser(@RequestBody Map<String, String> user) {
+        User member = userRepository.findByEmail(user.get("username"))
+                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
+        if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
+            throw new IllegalArgumentException("잘못된 비밀번호입니다.");
+        }
+        return jwtTokenProvider.createToken(member.getUsername(), member.getRoles(), member.getEmail());
+    }
+
     // 회원 삭제
     @Transactional
     public void deleteUser(Long id) {

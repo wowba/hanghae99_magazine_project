@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
+// userDetails 를 유저 엔티티에 직접 implements 하면 이 파일을 따로 만들지 않아도 된다!
 public class UserDetailsImpl implements UserDetails {
 
     private final User user;

@@ -22,7 +22,7 @@ import java.util.List;
 // JWT를 생성하고 검증하는 컴포넌트!
 public class JwtTokenProvider {
 
-    // 시크릿 키
+    // 시크릿 키. 실전에는 따로 환경변수 파일을 만들어서 보안을 생각하자.
     private String secretKey = "backendisking";
 
     // 토큰 유효시간 30분

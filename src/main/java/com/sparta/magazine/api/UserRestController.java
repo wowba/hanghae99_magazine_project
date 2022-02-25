@@ -41,12 +41,7 @@ public class UserRestController {
     // 로그인
     @PostMapping("/api/login")
     public ResponseEntity<LoginSuccess> loginUser(@RequestBody Map<String, String> user) {
-        User member = userRepository.findByEmail(user.get("username"))
-                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
-        if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
-            throw new IllegalArgumentException("잘못된 비밀번호입니다.");
-        }
-        String token = jwtTokenProvider.createToken(member.getUsername(), member.getRoles(), member.getEmail());
+        String token = userService.loginUser(user);
         return new ResponseEntity<>(new LoginSuccess("success", "로그인 성공", token), HttpStatus.OK);
     }
 
