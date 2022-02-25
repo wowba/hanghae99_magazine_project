@@ -55,12 +55,12 @@ public class LikeService {
                 () -> new IllegalArgumentException("좋아요를 누른 유저가 존재하지 않습니다."));
 
         // 삭제 전 유무 확인
-        Optional<Likelist> likelist = likelistRepository.findLikelistsByBoard_IdAndUser_Id(user.getId(), board_id);
+        Optional<Likelist> likelist = likelistRepository.findLikelistsByBoard_IdAndUser_Id(board_id, user.getId());
         if(!likelist.isPresent()){
             throw new IllegalArgumentException("삭제하려는 좋아요가 존재하지 않습니다.");
         }
 
         // 키를 두개 사용해서 해당 데이터를 찾아 삭제하기.
-        likelistRepository.deleteLikelistByBoard_IdAndUser_Id(user.getId(), board_id);
+        likelistRepository.deleteLikelistByBoard_IdAndUser_Id(board_id, user.getId());
     }
 }

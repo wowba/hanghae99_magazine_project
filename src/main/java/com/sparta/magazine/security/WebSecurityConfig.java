@@ -8,6 +8,7 @@ import com.sparta.magazine.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -63,7 +64,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .authorizeRequests() // 요청에 대한 사용권한 체크
 //                    .antMatchers("/admin/**").hasRole("ADMIN")
-                    .antMatchers("/user/**").hasRole("USER")
+
+                    // 게시판 가져오는 기능만 허가하기
+                    .antMatchers(HttpMethod.GET, "/api/board").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/board/{id}").permitAll()
+                    .antMatchers("/api/board/**").hasRole("USER")
+
+                    // 토큰 로그아웃 이슈가 존재한다...
+
                     .anyRequest().permitAll() // 그외 나머지 요청은 누구나 접근 가능
                 .and()
                     .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
