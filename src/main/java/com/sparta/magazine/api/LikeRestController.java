@@ -6,10 +6,7 @@ import com.sparta.magazine.service.LikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,7 +17,6 @@ public class LikeRestController {
     // 좋아요 생성하기
     @PostMapping("/api/board/{board_id}/like")
     public ResponseEntity<Success> createLike(@PathVariable Long board_id, @RequestBody LikeRequestDto likeRequestDto){
-
         likeService.createLike(board_id, likeRequestDto);
         return new ResponseEntity<>(new Success("success",  "(" + board_id + ") 좋아요 추가 성공!"), HttpStatus.OK);
     }

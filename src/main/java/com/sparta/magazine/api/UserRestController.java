@@ -2,18 +2,12 @@ package com.sparta.magazine.api;
 
 import com.sparta.magazine.dto.UserRequestDto;
 import com.sparta.magazine.dto.UserResponseDto;
-import com.sparta.magazine.jwt.JwtTokenProvider;
-import com.sparta.magazine.model.User;
 import com.sparta.magazine.model.responseEntity.LoginSuccess;
 import com.sparta.magazine.model.responseEntity.Success;
-import com.sparta.magazine.repository.UserRepository;
 import com.sparta.magazine.service.UserService;
-import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
