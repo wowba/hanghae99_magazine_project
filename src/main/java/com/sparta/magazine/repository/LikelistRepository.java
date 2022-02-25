@@ -13,7 +13,6 @@ public interface LikelistRepository extends JpaRepository<Likelist, Long> {
     Optional<Likelist> findLikelistsByBoard_IdAndUser_Id(Long board_id, Long user_id);
     // 좋아요 삭제용
     void deleteLikelistByBoard_IdAndUser_Id(Long board_id, Long user_id);
-
     // 상세페이지 좋아요 불러오기용
     List<Likelist> findLikelistsByBoard_Id(Long board_id);
 }

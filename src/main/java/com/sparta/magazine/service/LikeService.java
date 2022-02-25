@@ -25,15 +25,17 @@ public class LikeService {
     @Transactional
     public void createLike(Long board_id, LikeRequestDto likeRequestDto){
 
-        // 연관관계 편의 메소드 및 게시판, 회원 조회
-        Board board = boardRepository.findById(board_id).orElseThrow(
-                () -> new IllegalArgumentException("좋아요를 누른 게시판이 존재하지 않습니다."));
-        System.out.println(board);
+        // 추가 전 유무 확인
+        Optional<Likelist> checkLikelist = likelistRepository.findLikelistsByBoard_IdAndUser_Id(board_id, likeRequestDto.getUserId());
+        if(checkLikelist.isPresent()){
+            throw new IllegalArgumentException("이미 좋아요를 눌렀습니다.");
+        }
 
         User user = userRepository.findById(likeRequestDto.getUserId()).orElseThrow(
                 () -> new IllegalArgumentException("좋아요를 누른 유저가 존재하지 않습니다."));
-        System.out.println(user.getUsername());
-        System.out.println(111);
+
+        Board board = boardRepository.findById(board_id).orElseThrow(
+                () -> new IllegalArgumentException("좋아요를 누른 게시판이 존재하지 않습니다."));
 
         Likelist likelist = Likelist.builder()
                         .board(board)
@@ -49,16 +51,13 @@ public class LikeService {
     @Transactional
     public void deleteLike(Long board_id, LikeRequestDto likeRequestDto){
 
-        User user = userRepository.findById(likeRequestDto.getUserId()).orElseThrow(
-                () -> new IllegalArgumentException("좋아요를 누른 유저가 존재하지 않습니다."));
-
         // 삭제 전 유무 확인
-        Optional<Likelist> likelist = likelistRepository.findLikelistsByBoard_IdAndUser_Id(board_id, user.getId());
+        Optional<Likelist> likelist = likelistRepository.findLikelistsByBoard_IdAndUser_Id(board_id, likeRequestDto.getUserId());
         if(!likelist.isPresent()){
             throw new IllegalArgumentException("삭제하려는 좋아요가 존재하지 않습니다.");
         }
 
         // 키를 두개 사용해서 해당 데이터를 찾아 삭제하기.
-        likelistRepository.deleteLikelistByBoard_IdAndUser_Id(board_id, user.getId());
+        likelistRepository.deleteLikelistByBoard_IdAndUser_Id(board_id, likeRequestDto.getUserId());
     }
 }

@@ -146,7 +146,7 @@ public class BoardService {
     @Transactional
     public void editBoard(Long id, BoardRequestDto boardRequestDto) {
 
-        User user = userRepository.findById(id).orElseThrow(
+        User user = userRepository.findByUsername(boardRequestDto.getUsername()).orElseThrow(
                 () -> new IllegalArgumentException("유저를 조회할 수 없습니다."));
 
         if(!Objects.equals(boardRequestDto.getUsername(), user.getUsername())){
