@@ -2,6 +2,7 @@ package com.sparta.magazine.api;
 
 import com.sparta.magazine.dto.BoardRequestDto;
 import com.sparta.magazine.dto.BoardResponseDto;
+import com.sparta.magazine.model.User;
 import com.sparta.magazine.model.responseEntity.BoardSuccess;
 import com.sparta.magazine.model.responseEntity.GetMultiBoard;
 import com.sparta.magazine.model.responseEntity.GetSingleBoard;
@@ -9,6 +10,7 @@ import com.sparta.magazine.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,8 +51,8 @@ public class BoardRestController {
 
     // 게시판 삭제하기
     @DeleteMapping("/api/board/{id}")
-    public ResponseEntity<BoardSuccess> deleteBoard(@PathVariable Long id){
-        boardService.deleteBoard(id);
+    public ResponseEntity<BoardSuccess> deleteBoard(@PathVariable Long id, @AuthenticationPrincipal User user){
+        boardService.deleteBoard(id, user);
         return new ResponseEntity<>(new BoardSuccess("success", "해당 게시판(" + id +")이 삭제 되었습니다.", id), HttpStatus.OK);
     }
 }

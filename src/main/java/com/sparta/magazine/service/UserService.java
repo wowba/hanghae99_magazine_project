@@ -18,7 +18,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-import static com.sparta.magazine.exception.ErrorCode.USERNAME_VALIDATE;
+import static com.sparta.magazine.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -36,21 +36,22 @@ public class UserService {
 
         // 유저네임 유효성 확인
         if(!Pattern.matches("^[a-zA-Z0-9]{3,20}$", userRequestDto.getUsername())) {
-//            throw new IllegalArgumentException("유저네임은 최소 3자 이상, 알파벳 대소문자(a~z, A~Z), 숫자(0~9)로 구성해야 합니다.");
             throw new ErrorCodeException(USERNAME_VALIDATE);
         }
 
-        // 비밀번호 유효성 확인
+        // 비밀번호 닉네임 포함 확인
         if(userRequestDto.getPassword().contains(userRequestDto.getUsername())) {
-            throw new IllegalArgumentException("비밀번호는 닉네임을 포함하지 못합니다.");
+            throw new ErrorCodeException(PASSWORD_INCLUDE_USERNAME);
         }
-
+        
+        // 비밀번호 길이 확인
         if(userRequestDto.getPassword().length() < 4) {
-            throw new IllegalArgumentException("비밀번호는 최소 4자 이상입니다.");
+            throw new ErrorCodeException(PASSWORD_LENGTH);
         }
-
+        
+        // 비밀번호 일치 확인
         if(!Objects.equals(userRequestDto.getPassword(), userRequestDto.getPasswordCheck())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new ErrorCodeException(PASSWORD_COINCIDE);
         }
         
         // 비밀번호 암호화
@@ -77,7 +78,7 @@ public class UserService {
     private void emailIsExist(User user) {
         Optional<User> findEmail = userRepository.findByEmail(user.getEmail());
         if(findEmail.isPresent()){
-            throw new IllegalArgumentException("이미 존재하는 회원입니다.");
+            throw new ErrorCodeException(EMAIL_DUPLICATE);
         }
     }
 
@@ -85,16 +86,16 @@ public class UserService {
     private void usernameIsExist(User user) {
         Optional<User> findUsername = userRepository.findByUsername(user.getUsername());
         if(findUsername.isPresent()){
-            throw new IllegalArgumentException("이미 존재하는 회원입니다.");
+            throw new ErrorCodeException(USERNAME_DUPLICATE);
         }
     }
 
     // 로그인
     public UserResponseDto loginUser(@RequestBody Map<String, String> user) {
         User member = userRepository.findByEmail(user.get("email"))
-                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
+                .orElseThrow(() -> new ErrorCodeException(LOGIN_USER_NOT_FOUND));
         if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
-            throw new IllegalArgumentException("잘못된 비밀번호입니다.");
+            throw new ErrorCodeException(LOGIN_PASSWORD_NOT_MATCH);
         }
         UserResponseDto userResponseDto = UserResponseDto.builder()
                                 .email(member.getEmail())

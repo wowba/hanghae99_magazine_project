@@ -3,6 +3,7 @@ package com.sparta.magazine.service;
 import com.sparta.magazine.dto.BoardRequestDto;
 import com.sparta.magazine.dto.BoardResponseDto;
 import com.sparta.magazine.dto.LikeResponseDto;
+import com.sparta.magazine.exception.ErrorCodeException;
 import com.sparta.magazine.model.Board;
 import com.sparta.magazine.model.Likelist;
 import com.sparta.magazine.model.User;
@@ -10,13 +11,18 @@ import com.sparta.magazine.repository.BoardRepository;
 import com.sparta.magazine.repository.LikelistRepository;
 import com.sparta.magazine.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import static com.sparta.magazine.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -75,7 +81,7 @@ public class BoardService {
 
         // 게시글 정보 가져오기
         Board board = boardRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+                () -> new ErrorCodeException(BOARD_NOT_FOUND));
 
         // 좋아요 리스트 가져오기
         List<Likelist> likelists = likelistRepository.findLikelistsByBoard_Id(id);
@@ -131,7 +137,7 @@ public class BoardService {
     private void usernameIsExist(String username) {
         Optional<User> findUsername = userRepository.findByUsername(username);
         if(!findUsername.isPresent()){
-            throw new IllegalArgumentException("게시글을 만드려는 회원은 존재하지 않습니다.");
+            throw new ErrorCodeException(USER_NOT_FOUND);
         }
     }
 
@@ -145,28 +151,38 @@ public class BoardService {
     // 게시판 수정
     @Transactional
     public void editBoard(Long id, BoardRequestDto boardRequestDto) {
-
+        
+        // 수정하려는 유저 조회
         User user = userRepository.findByUsername(boardRequestDto.getUsername()).orElseThrow(
-                () -> new IllegalArgumentException("유저를 조회할 수 없습니다."));
+                () -> new ErrorCodeException(USER_NOT_FOUND));
 
+        // 수정하려는 유저가 게시판의 생성자인지 확인
         if(!Objects.equals(boardRequestDto.getUsername(), user.getUsername())){
-            throw new IllegalArgumentException("게시글의 생성자만 글을 수정할 수 있습니다.");
+            throw new ErrorCodeException(BOARD_EDIT_OR_DELETE_NOT_MATCH);
         }
-
+        
+        // 수정할 게시판이 존재하는지 확인
         Board board = boardRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("수정하려는 해당 게시글(" + id + ")이 존재하지 않습니다."));
+                () -> new ErrorCodeException(BOARD_NOT_FOUND));
         board.Edit(boardRequestDto);
     }
 
     // 게시판 삭제
     @Transactional
-    public void deleteBoard(Long id) {
+    public void deleteBoard(Long id, User user ) {
 
+        String username = user.getUsername();
+
+        // 삭제하려는 게시판이 존재하는지 확인
         Board board = boardRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("삭제하려는 해당 게시글(" + id + ")이 존재하지 않습니다."));
+                () -> new ErrorCodeException(BOARD_NOT_FOUND));
+
+        // 삭제하려는 유저가 작성자인지 확인.
+        if(!(Objects.equals(username, board.getUsername()))) {
+            throw new ErrorCodeException(BOARD_EDIT_OR_DELETE_NOT_MATCH);
+        }
 
         // 유저 정보를 받아와서 삭제를 제한할 수 있는 기능이 필요하다.
-
         boardRepository.deleteById(id);
     }
 }

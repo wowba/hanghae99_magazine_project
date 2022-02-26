@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder // 언젠가 지우기.
 public class User extends Timestamped implements UserDetails {
 
     @Id
@@ -50,11 +50,11 @@ public class User extends Timestamped implements UserDetails {
 
     // 게시글 생성자
     @Builder
-    public User(String email, String username, String password) {
-
+    public User(String email, String username, String password, List<String> roles) {
         this.email = email;
         this.username = username;
         this.password = password;
+        this.roles = roles;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.sparta.magazine.service;
 
 import com.sparta.magazine.dto.LikeRequestDto;
+import com.sparta.magazine.exception.ErrorCodeException;
 import com.sparta.magazine.model.Board;
 import com.sparta.magazine.model.Likelist;
 import com.sparta.magazine.model.User;
@@ -11,8 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.security.Principal;
 import java.util.Optional;
+
+import static com.sparta.magazine.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -26,17 +28,19 @@ public class LikeService {
     @Transactional
     public void createLike(Long board_id, LikeRequestDto likeRequestDto){
 
-        // 추가 전 유무 확인
+        // 좋아요를 이미 눌렀는지 확인
         Optional<Likelist> checkLikelist = likelistRepository.findLikelistsByBoard_IdAndUser_Id(board_id, likeRequestDto.getUserId());
         if(checkLikelist.isPresent()){
-            throw new IllegalArgumentException("이미 좋아요를 눌렀습니다.");
+            throw new ErrorCodeException(LIKE_EXIST);
         }
 
+        // 유저 존재 확인
         User user = userRepository.findById(likeRequestDto.getUserId()).orElseThrow(
-                () -> new IllegalArgumentException("좋아요를 누른 유저가 존재하지 않습니다."));
+                () -> new ErrorCodeException(USER_NOT_FOUND));
 
+        // 게시판 존재 확인
         Board board = boardRepository.findById(board_id).orElseThrow(
-                () -> new IllegalArgumentException("좋아요를 누른 게시판이 존재하지 않습니다."));
+                () -> new ErrorCodeException(BOARD_NOT_FOUND));
 
         Likelist likelist = Likelist.builder()
                         .board(board)
@@ -52,10 +56,10 @@ public class LikeService {
     @Transactional
     public void deleteLike(Long board_id, LikeRequestDto likeRequestDto){
 
-        // 삭제 전 유무 확인
+        // 좋아요 유무 확인
         Optional<Likelist> likelist = likelistRepository.findLikelistsByBoard_IdAndUser_Id(board_id, likeRequestDto.getUserId());
         if(!likelist.isPresent()){
-            throw new IllegalArgumentException("삭제하려는 좋아요가 존재하지 않습니다.");
+            throw new ErrorCodeException(LIKE_EXIST);
         }
 
         // 키를 두개 사용해서 해당 데이터를 찾아 삭제하기.
