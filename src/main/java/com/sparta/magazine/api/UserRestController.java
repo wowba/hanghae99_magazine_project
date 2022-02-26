@@ -25,13 +25,6 @@ public class UserRestController {
         return new ResponseEntity<>(new Success("success", "회원 가입 성공하였습니다."), HttpStatus.OK);
     }
 
-//    // 유저 생성하기 (Form DATA)
-//    @PostMapping("/api/register")
-//    public ResponseEntity<Success> createUser(UserRequestDto userRequestDto){
-//        userService.createUser(userRequestDto);
-//        return new ResponseEntity<>(new Success("success", "회원 가입 성공하였습니다."), HttpStatus.OK);
-//    }
-
     // 로그인
     @PostMapping("/api/login")
     public ResponseEntity<LoginSuccess> loginUser(@RequestBody Map<String, String> user) {

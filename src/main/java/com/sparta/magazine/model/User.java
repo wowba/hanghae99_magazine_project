@@ -48,7 +48,7 @@ public class User extends Timestamped implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL})
     private List<Likelist> likeList = new ArrayList<>();
 
-    // 게시글 생성자
+    // 게시글 생성자 // 수정필요!!!!
     @Builder
     public User(String email, String username, String password, List<String> roles) {
         this.email = email;

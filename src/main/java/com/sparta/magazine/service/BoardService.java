@@ -11,12 +11,9 @@ import com.sparta.magazine.repository.BoardRepository;
 import com.sparta.magazine.repository.LikelistRepository;
 import com.sparta.magazine.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -171,18 +168,17 @@ public class BoardService {
     @Transactional
     public void deleteBoard(Long id, User user ) {
 
-        String username = user.getUsername();
-
         // 삭제하려는 게시판이 존재하는지 확인
         Board board = boardRepository.findById(id).orElseThrow(
                 () -> new ErrorCodeException(BOARD_NOT_FOUND));
 
         // 삭제하려는 유저가 작성자인지 확인.
+        String username = user.getUsername();
         if(!(Objects.equals(username, board.getUsername()))) {
             throw new ErrorCodeException(BOARD_EDIT_OR_DELETE_NOT_MATCH);
         }
-
-        // 유저 정보를 받아와서 삭제를 제한할 수 있는 기능이 필요하다.
+        
+        // 게시판 삭제
         boardRepository.deleteById(id);
     }
 }

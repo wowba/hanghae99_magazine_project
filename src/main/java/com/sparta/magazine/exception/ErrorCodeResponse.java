@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 // 실제로 유저에게 보낼 응답 포맷.
 @Getter
 @Builder
-public class ErrorResponse {
+public class ErrorCodeResponse {
 
     private final LocalDateTime timestamp = LocalDateTime.now();
     private final int status;
@@ -17,11 +17,11 @@ public class ErrorResponse {
     private final String errorCode;
     private final String message;
 
-    public static ResponseEntity<ErrorResponse> toResponseEntity(ErrorCode errorCode) {
+    public static ResponseEntity<ErrorCodeResponse> toResponseEntity(ErrorCode errorCode) {
 
         return ResponseEntity
                 .status(errorCode.getHttpStatus())
-                .body(ErrorResponse.builder()
+                .body(ErrorCodeResponse.builder()
                         .status(errorCode.getHttpStatus().value())
                         .error(errorCode.getHttpStatus().name())
                         .errorCode(errorCode.getErrorCode())
