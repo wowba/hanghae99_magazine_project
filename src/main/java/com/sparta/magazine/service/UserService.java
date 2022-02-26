@@ -2,6 +2,7 @@ package com.sparta.magazine.service;
 
 import com.sparta.magazine.dto.UserRequestDto;
 import com.sparta.magazine.dto.UserResponseDto;
+import com.sparta.magazine.exception.ErrorCodeException;
 import com.sparta.magazine.jwt.JwtTokenProvider;
 import com.sparta.magazine.model.User;
 import com.sparta.magazine.repository.UserRepository;
@@ -16,6 +17,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
+
+import static com.sparta.magazine.exception.ErrorCode.USERNAME_VALIDATE;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +36,8 @@ public class UserService {
 
         // 유저네임 유효성 확인
         if(!Pattern.matches("^[a-zA-Z0-9]{3,20}$", userRequestDto.getUsername())) {
-            throw new IllegalArgumentException("유저네임은 최소 3자 이상, 알파벳 대소문자(a~z, A~Z), 숫자(0~9)로 구성해야 합니다.");
+//            throw new IllegalArgumentException("유저네임은 최소 3자 이상, 알파벳 대소문자(a~z, A~Z), 숫자(0~9)로 구성해야 합니다.");
+            throw new ErrorCodeException(USERNAME_VALIDATE);
         }
 
         // 비밀번호 유효성 확인

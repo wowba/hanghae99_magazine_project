@@ -1,7 +1,7 @@
 package com.sparta.magazine.security;
 
-import com.sparta.magazine.exception.CustomAccessDeniedHandler;
-import com.sparta.magazine.exception.CustomAuthenticationEntryPoint;
+import com.sparta.magazine.jwt.CustomAccessDeniedHandler;
+import com.sparta.magazine.jwt.CustomAuthenticationEntryPoint;
 import com.sparta.magazine.jwt.JwtAuthenticationFilter;
 import com.sparta.magazine.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;

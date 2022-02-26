@@ -35,8 +35,8 @@ public class User extends Timestamped implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Builder.Default
+    @ElementCollection(fetch = FetchType.EAGER) // 공부 하기!
+//    @Builder.Default // 삭제 해도 무방할거 같음. 공부 할것!
     private List<String> roles = new ArrayList<>();
 
     // 양방향 연관관계시 객체의 참조는 둘인데 외래 키는 하나이므로 외래키를 관리할 주인을 정해야 한다.
@@ -51,6 +51,7 @@ public class User extends Timestamped implements UserDetails {
     // 게시글 생성자
     @Builder
     public User(String email, String username, String password) {
+
         this.email = email;
         this.username = username;
         this.password = password;
