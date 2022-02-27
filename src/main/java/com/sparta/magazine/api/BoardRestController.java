@@ -8,6 +8,7 @@ import com.sparta.magazine.model.responseEntity.GetMultiBoard;
 import com.sparta.magazine.model.responseEntity.GetSingleBoard;
 import com.sparta.magazine.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,11 +22,21 @@ public class BoardRestController {
 
     private final BoardService boardService;
 
-    // 전체 게시판 가져오기
+//    // 전체 게시판 가져오기
+//    @GetMapping("/api/board")
+//    public ResponseEntity<GetMultiBoard> getMultiBoards(){
+//        List<BoardResponseDto> boardResponseDtos = boardService.getAllBoard();
+//        return new ResponseEntity<>(new GetMultiBoard("success", "모든 게시판 가져오기 성공", boardResponseDtos), HttpStatus.OK);
+//    }
+
+    // 전체 게시판 가져오기 ( 무한스크롤 )
     @GetMapping("/api/board")
-    public ResponseEntity<GetMultiBoard> getMultiBoards(){
-        List<BoardResponseDto> boardResponseDtos = boardService.getAllBoard();
-        return new ResponseEntity<>(new GetMultiBoard("success", "모든 게시판 가져오기 성공", boardResponseDtos), HttpStatus.OK);
+    public ResponseEntity<GetMultiBoard> getMultiBoards(
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam("sortBy") String sortBy
+    ){
+        return boardService.getAllBoard(page, size, sortBy);
     }
 
     // 상세 게시판 가져오기

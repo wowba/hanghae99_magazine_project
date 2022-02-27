@@ -15,7 +15,7 @@ public class ErrorCodeResponse {
     private final int status;
     private final String error;
     private final String errorCode;
-    private final String message;
+    private final String msg;
 
     public static ResponseEntity<ErrorCodeResponse> toResponseEntity(ErrorCode errorCode) {
 
@@ -25,7 +25,7 @@ public class ErrorCodeResponse {
                         .status(errorCode.getHttpStatus().value())
                         .error(errorCode.getHttpStatus().name())
                         .errorCode(errorCode.getErrorCode())
-                        .message(errorCode.getErrorMessage())
+                        .msg(errorCode.getErrorMessage())
                         .build()
                 );
     }

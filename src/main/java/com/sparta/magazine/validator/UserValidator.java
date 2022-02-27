@@ -1,4 +1,4 @@
-package com.sparta.magazine.validate;
+package com.sparta.magazine.validator;
 
 import com.sparta.magazine.dto.UserRequestDto;
 import com.sparta.magazine.exception.ErrorCodeException;

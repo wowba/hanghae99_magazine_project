@@ -6,7 +6,7 @@ import com.sparta.magazine.exception.ErrorCodeException;
 import com.sparta.magazine.jwt.JwtTokenProvider;
 import com.sparta.magazine.model.User;
 import com.sparta.magazine.repository.UserRepository;
-import com.sparta.magazine.validate.UserValidator;
+import com.sparta.magazine.validator.UserValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

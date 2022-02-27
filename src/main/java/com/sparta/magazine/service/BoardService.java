@@ -7,10 +7,17 @@ import com.sparta.magazine.exception.ErrorCodeException;
 import com.sparta.magazine.model.Board;
 import com.sparta.magazine.model.Likelist;
 import com.sparta.magazine.model.User;
+import com.sparta.magazine.model.responseEntity.GetMultiBoard;
 import com.sparta.magazine.repository.BoardRepository;
 import com.sparta.magazine.repository.LikelistRepository;
 import com.sparta.magazine.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -31,10 +38,21 @@ public class BoardService {
 
     // 전체 게시판 불러오기
     @Transactional
-    public List<BoardResponseDto> getAllBoard(){
+    public ResponseEntity<GetMultiBoard> getAllBoard(int page, int size, String sortBy){
 
-        // 모든 게시글 가져오기
-        List<Board> boardList = boardRepository.findAll();
+        // 모든 게시글 가져오기 (무한스크롤 적용)
+        page = page - 1; // DB에선 0부터 찾기 때문에 이렇게 해줘야 한다.
+        Sort.Direction direction = Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+//        Pageable pageable2 = new PageRequest(page, size, sort); // ?? 잘 모르게따
+        Page<Board> boardList = boardRepository.findAll(pageable);
+
+        boolean isLast = boardList.isLast();
+        boolean isFirst = boardList.isFirst();
+
+        // 모든 게시글 가져오기 (무한스크롤 미적용)
+//        List<Board> boardList = boardRepository.findAll();
 
         // 게시글을 반환해서 저장할 리스트
         List<BoardResponseDto> boardResponseDtos = new ArrayList<>();
@@ -69,7 +87,8 @@ public class BoardService {
             boardResponseDtos.add(boardResponseDto);
         }
 
-        return boardResponseDtos;
+//        return boardResponseDtos; // 무한스크롤 없는 버전 용
+        return new ResponseEntity<>(new GetMultiBoard("success", "모든 게시판 가져오기 성공", boardResponseDtos, isFirst, isLast), HttpStatus.OK);
     }
 
     // 상세 게시판 불러오기
