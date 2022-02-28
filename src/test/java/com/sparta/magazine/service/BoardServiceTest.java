@@ -130,7 +130,6 @@ class BoardServiceTest {
 
         // then
         assertEquals(content, board.getContent());
-
     }
 
     @Test
@@ -147,6 +146,5 @@ class BoardServiceTest {
 
         // then
         assertEquals(Optional.empty(), boardRepository.findById(id));
-
     }
 }

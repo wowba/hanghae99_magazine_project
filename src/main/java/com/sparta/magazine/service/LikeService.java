@@ -29,7 +29,7 @@ public class LikeService {
     public void createLike(Long board_id, LikeRequestDto likeRequestDto){
 
         // 좋아요를 이미 눌렀는지 확인
-        Optional<Likelist> checkLikelist = likelistRepository.findLikelistsByBoard_IdAndUser_Id(board_id, likeRequestDto.getUserId());
+        Optional<Likelist> checkLikelist = likelistRepository.findLikelistByBoard_IdAndUser_Id(board_id, likeRequestDto.getUserId());
         if(checkLikelist.isPresent()){
             throw new ErrorCodeException(LIKE_EXIST);
         }
@@ -57,7 +57,7 @@ public class LikeService {
     public void deleteLike(Long board_id, LikeRequestDto likeRequestDto){
 
         // 좋아요 유무 확인
-        Optional<Likelist> likelist = likelistRepository.findLikelistsByBoard_IdAndUser_Id(board_id, likeRequestDto.getUserId());
+        Optional<Likelist> likelist = likelistRepository.findLikelistByBoard_IdAndUser_Id(board_id, likeRequestDto.getUserId());
         if(!likelist.isPresent()){
             throw new ErrorCodeException(LIKE_EXIST);
         }
