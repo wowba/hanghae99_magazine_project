@@ -22,7 +22,7 @@ public class BoardRestController {
 
     private final BoardService boardService;
 
-//    // 전체 게시판 가져오기
+//    // 전체 게시판 가져오기 ( 무한스크롤 미적용 )
 //    @GetMapping("/api/board")
 //    public ResponseEntity<GetMultiBoard> getMultiBoards(){
 //        List<BoardResponseDto> boardResponseDtos = boardService.getAllBoard();

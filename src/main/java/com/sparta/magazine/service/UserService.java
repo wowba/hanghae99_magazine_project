@@ -6,6 +6,7 @@ import com.sparta.magazine.exception.ErrorCodeException;
 import com.sparta.magazine.jwt.JwtTokenProvider;
 import com.sparta.magazine.model.User;
 import com.sparta.magazine.repository.UserRepository;
+import com.sparta.magazine.validator.LoginValidator;
 import com.sparta.magazine.validator.UserValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,6 +29,7 @@ public class UserService {
     private final UserRepository userRepository;
     // 유효성 검사
     private final UserValidator userValidator;
+    private final LoginValidator loginValidator;
     // 토큰 생성기
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -55,11 +57,10 @@ public class UserService {
 
     // 로그인
     public UserResponseDto loginUser(@RequestBody Map<String, String> user) {
-        User member = userRepository.findByEmail(user.get("email"))
-                .orElseThrow(() -> new ErrorCodeException(LOGIN_USER_NOT_FOUND));
-        if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
-            throw new ErrorCodeException(LOGIN_PASSWORD_NOT_MATCH);
-        }
+        
+        // 유효성 검사
+        User member = loginValidator.validateLoginInput(user);
+
         UserResponseDto userResponseDto = UserResponseDto.builder()
                                 .email(member.getEmail())
                                 .username(member.getUsername())
