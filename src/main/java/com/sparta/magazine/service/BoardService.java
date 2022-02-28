@@ -45,7 +45,6 @@ public class BoardService {
         Sort.Direction direction = Sort.Direction.DESC;
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
-//        Pageable pageable2 = new PageRequest(page, size, sort); // ?? 잘 모르게따
         Page<Board> boardList = boardRepository.findAll(pageable);
 
         boolean isLast = boardList.isLast();

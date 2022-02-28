@@ -2,7 +2,6 @@ package com.sparta.magazine.service;
 
 import com.sparta.magazine.dto.UserRequestDto;
 import com.sparta.magazine.dto.UserResponseDto;
-import com.sparta.magazine.exception.ErrorCodeException;
 import com.sparta.magazine.jwt.JwtTokenProvider;
 import com.sparta.magazine.model.User;
 import com.sparta.magazine.repository.UserRepository;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.Map;
-
-import static com.sparta.magazine.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
