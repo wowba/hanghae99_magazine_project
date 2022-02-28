@@ -14,10 +14,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -45,8 +48,7 @@ class LikeServiceTest {
     private LikelistRepository likelistRepository;
 
     @Order(0)
-    @BeforeEach
-        // 각 테스트 실행 전 자동으로 설정한다.
+    @BeforeEach// 각 테스트 실행 전 자동으로 설정한다.
     void setup() {
 
         // 테스트 게시판 생성
@@ -98,10 +100,10 @@ class LikeServiceTest {
 
         // when
         // 좋아요 삭제
-//        likeService.deleteLike(boardId, likeRequestDto);
-        likelistRepository.deleteLikelistByBoard_IdAndUser_Id(boardId, likeRequestDto.getUserId());
-        Likelist likelist = likelistRepository.findLikelistByBoard_IdAndUser_Id(boardId, user.getId()).orElseThrow(
-                () -> new IllegalArgumentException("Like does not Exist"));
+        likeService.deleteLike(boardId, likeRequestDto);
+        likelistRepository.deleteLikelistByBoard_IdAndUser_Id(boardId, user.getId());
+
+        Optional<Likelist> likelist = likelistRepository.findLikelistByBoard_IdAndUser_Id(boardId, likeRequestDto.getUserId());
 
         // then
         assertNull(likelist);

@@ -112,7 +112,7 @@ class UserServiceTest {
 
                     // when
                     // 유효성 검사 패키지
-                    Exception exception = assertThrows(ErrorCodeException.class, ()
+                    ErrorCodeException exception = assertThrows(ErrorCodeException.class, ()
                             -> userValidator.validateUserInput(userRequestDto));
 
                     // then
