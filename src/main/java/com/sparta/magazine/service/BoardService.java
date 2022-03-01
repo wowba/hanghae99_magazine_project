@@ -11,6 +11,7 @@ import com.sparta.magazine.model.responseEntity.GetMultiBoard;
 import com.sparta.magazine.repository.BoardRepository;
 import com.sparta.magazine.repository.LikelistRepository;
 import com.sparta.magazine.repository.UserRepository;
+import com.sparta.magazine.validator.BoardValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,8 +24,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 import static com.sparta.magazine.exception.ErrorCode.*;
 
@@ -35,6 +34,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final LikelistRepository likelistRepository;
+    private final BoardValidator boardValidator;
 
     // 전체 게시판 불러오기
     @Transactional
@@ -138,7 +138,8 @@ public class BoardService {
         // imageUrl 존재하는지 확인 - 프론트와 협의 후 추가예정
 
         // 게시글을 만드려는 유저가 존재하는지 확인
-        usernameIsExist(boardRequestDto.getUsername());
+        boardValidator.validateCreateBoard(boardRequestDto.getUsername());
+
         // 연관관계 편의 메소드
         User user = userRepository.findUserByUsername(boardRequestDto.getUsername());
         board.SetUser(user);
@@ -148,54 +149,20 @@ public class BoardService {
         return board.getId();
     }
 
-    // 게시글을 생성하려는 유저가 존재하는지 확인
-    private void usernameIsExist(String username) {
-        Optional<User> findUsername = userRepository.findByUsername(username);
-        if(!findUsername.isPresent()){
-            throw new ErrorCodeException(USER_NOT_FOUND);
-        }
-    }
-
-    // imageUrl 존재하는지 확인 (프론트와 협의 후 기능 추가 예정) 
-    private void imageUrlIsExist(Board board) {
-        if(Objects.equals(board.getImageUrl(), "")){
-            throw new IllegalArgumentException("포스팅할 이미지 주소를 넣어주세요!");
-        }
-    }
-
     // 게시판 수정
     @Transactional
     public void editBoard(Long id, BoardRequestDto boardRequestDto) {
-        
-        // 수정하려는 유저 조회
-        User user = userRepository.findByUsername(boardRequestDto.getUsername()).orElseThrow(
-                () -> new ErrorCodeException(USER_NOT_FOUND));
 
-        // 수정하려는 유저가 게시판의 생성자인지 확인
-        if(!Objects.equals(boardRequestDto.getUsername(), user.getUsername())){
-            throw new ErrorCodeException(BOARD_EDIT_OR_DELETE_NOT_MATCH);
-        }
-        
-        // 수정할 게시판이 존재하는지 확인
-        Board board = boardRepository.findById(id).orElseThrow(
-                () -> new ErrorCodeException(BOARD_NOT_FOUND));
+        Board board = boardValidator.validateEditBoard(id, boardRequestDto);
         board.Edit(boardRequestDto);
     }
 
     // 게시판 삭제
     @Transactional
     public void deleteBoard(Long id, User user ) {
-
-        // 삭제하려는 게시판이 존재하는지 확인
-        Board board = boardRepository.findById(id).orElseThrow(
-                () -> new ErrorCodeException(BOARD_NOT_FOUND));
-
-        // 삭제하려는 유저가 작성자인지 확인.
-        String username = user.getUsername();
-        if(!(Objects.equals(username, board.getUsername()))) {
-            throw new ErrorCodeException(BOARD_EDIT_OR_DELETE_NOT_MATCH);
-        }
         
+        // 유효성 검사
+        boardValidator.validateDeleteBoard(id, user);
         // 게시판 삭제
         boardRepository.deleteById(id);
     }

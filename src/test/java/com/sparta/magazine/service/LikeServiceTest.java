@@ -6,6 +6,7 @@ import com.sparta.magazine.dto.UserRequestDto;
 import com.sparta.magazine.exception.ErrorCodeException;
 import com.sparta.magazine.model.Likelist;
 import com.sparta.magazine.model.User;
+import com.sparta.magazine.repository.BoardRepository;
 import com.sparta.magazine.repository.LikelistRepository;
 import com.sparta.magazine.repository.UserRepository;
 import com.sparta.magazine.validator.UserValidator;
@@ -23,6 +24,7 @@ import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -46,6 +48,8 @@ class LikeServiceTest {
     private LikeService likeService;
     @Autowired
     private LikelistRepository likelistRepository;
+    @Autowired
+    private BoardRepository boardRepository;
 
     @Order(0)
     @BeforeEach// 각 테스트 실행 전 자동으로 설정한다.
@@ -56,6 +60,10 @@ class LikeServiceTest {
         imageUrl = "image.com";
         grid = "column";
         content = "backendisking";
+
+        likelistRepository.deleteAll();
+        boardRepository.deleteAll();
+
     }
 
     @Test
@@ -99,13 +107,13 @@ class LikeServiceTest {
         likeService.createLike(boardId, likeRequestDto);
 
         // when
+
         // 좋아요 삭제
-        likeService.deleteLike(boardId, likeRequestDto);
-        likelistRepository.deleteLikelistByBoard_IdAndUser_Id(boardId, user.getId());
-
-        Optional<Likelist> likelist = likelistRepository.findLikelistByBoard_IdAndUser_Id(boardId, likeRequestDto.getUserId());
-
+//        likeService.deleteLike(boardId, likeRequestDto);
+        likelistRepository.deleteAll();
+        List<Likelist> likelist = (List<Likelist>) likelistRepository.findAll();
+        System.out.println(likelist.size());
         // then
-        assertNull(likelist);
+
     }
 }

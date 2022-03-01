@@ -8,10 +8,12 @@ import com.sparta.magazine.model.User;
 import com.sparta.magazine.repository.BoardRepository;
 import com.sparta.magazine.repository.LikelistRepository;
 import com.sparta.magazine.repository.UserRepository;
+import com.sparta.magazine.validator.LikeValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 import static com.sparta.magazine.exception.ErrorCode.*;
@@ -23,28 +25,20 @@ public class LikeService {
     private final BoardRepository boardRepository;
     private final LikelistRepository likelistRepository;
     private final UserRepository userRepository;
+    private final LikeValidator likeValidator;
 
     // 좋아요 생성하기
     @Transactional
     public void createLike(Long board_id, LikeRequestDto likeRequestDto){
-
-        // 좋아요를 이미 눌렀는지 확인
-        Optional<Likelist> checkLikelist = likelistRepository.findLikelistByBoard_IdAndUser_Id(board_id, likeRequestDto.getUserId());
-        if(checkLikelist.isPresent()){
-            throw new ErrorCodeException(LIKE_EXIST);
-        }
-
-        // 유저 존재 확인
-        User user = userRepository.findById(likeRequestDto.getUserId()).orElseThrow(
-                () -> new ErrorCodeException(USER_NOT_FOUND));
-
-        // 게시판 존재 확인
-        Board board = boardRepository.findById(board_id).orElseThrow(
-                () -> new ErrorCodeException(BOARD_NOT_FOUND));
-
+        
+        // 유효성 검사
+        List<Object> userAndBoard = likeValidator.validateCreateLike(board_id, likeRequestDto);
+        User user = (User) userAndBoard.get(0);
+        Board board = (Board) userAndBoard.get(1);
+        // 좋아요 생성
         Likelist likelist = Likelist.builder()
-                        .board(board)
-                        .user(user)
+                        .board((Board) userAndBoard.get(1))
+                        .user((User) userAndBoard.get(0))
                         .build();
 
         likelist.SetUser(user);
@@ -55,13 +49,9 @@ public class LikeService {
     // 좋아요 삭제하기
     @Transactional
     public void deleteLike(Long board_id, LikeRequestDto likeRequestDto){
-
-        // 좋아요 유무 확인
-        Optional<Likelist> likelist = likelistRepository.findLikelistByBoard_IdAndUser_Id(board_id, likeRequestDto.getUserId());
-        if(!likelist.isPresent()){
-            throw new ErrorCodeException(LIKE_EXIST);
-        }
-
+        
+        // 유효성 검사
+        likeValidator.validateDeleteLike(board_id, likeRequestDto);
         // 키를 두개 사용해서 해당 데이터를 찾아 삭제하기.
         likelistRepository.deleteLikelistByBoard_IdAndUser_Id(board_id, likeRequestDto.getUserId());
     }

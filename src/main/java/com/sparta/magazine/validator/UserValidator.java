@@ -12,7 +12,6 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 import static com.sparta.magazine.exception.ErrorCode.*;
-import static com.sparta.magazine.exception.ErrorCode.PASSWORD_COINCIDE;
 
 @Component // 선언하지 않으면 사용할 수 없다!!!!!
 @RequiredArgsConstructor
