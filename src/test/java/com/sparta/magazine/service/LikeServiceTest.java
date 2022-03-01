@@ -61,9 +61,6 @@ class LikeServiceTest {
         grid = "column";
         content = "backendisking";
 
-        likelistRepository.deleteAll();
-        boardRepository.deleteAll();
-
     }
 
     @Test
@@ -105,15 +102,19 @@ class LikeServiceTest {
 
         // 좋아요 추가
         likeService.createLike(boardId, likeRequestDto);
+        System.out.println("좋아요 생성 성공");
 
         // when
 
         // 좋아요 삭제
 //        likeService.deleteLike(boardId, likeRequestDto);
-        likelistRepository.deleteAll();
-        List<Likelist> likelist = (List<Likelist>) likelistRepository.findAll();
-        System.out.println(likelist.size());
+//        likelistRepository.deleteAll();
+//        likelistRepository.deleteLikelistByBoard_IdAndUser_Id(boardId, likeRequestDto.getUserId());
+        likelistRepository.deleteAllInBatch();
+        System.out.println("제발 삭제해줘");
+        List<Likelist> likelist = likelistRepository.findAll();
+        System.out.println(likelist.isEmpty());
         // then
-
+        assertTrue(likelist.isEmpty());
     }
 }
