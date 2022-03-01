@@ -33,7 +33,6 @@ public class Board extends Timestamped{
     @Column
     private String content;
 
-    @JsonManagedReference
     @ManyToOne // 게시글은 여러개, 계정은 하나. 게시글은 곧 연관관계의 주인!
     @JoinColumn(name = "user_id")
     private User user;

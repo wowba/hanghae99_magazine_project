@@ -16,13 +16,11 @@ public class Likelist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @ManyToOne
     @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonManagedReference
     private User user;
 
-//    @ManyToOne
     @ManyToOne
     @JoinColumn(name = "board_id")
     @JsonManagedReference
