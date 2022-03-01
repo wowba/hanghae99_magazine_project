@@ -3,10 +3,10 @@ package com.sparta.magazine.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sparta.magazine.dto.BoardRequestDto;
+import io.jsonwebtoken.lang.Assert;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,7 +14,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 public class Board extends Timestamped{
 
@@ -39,8 +38,6 @@ public class Board extends Timestamped{
     @JoinColumn(name = "user_id")
     private User user;
 
-    // failed to lazily initialize a collection of role
-    // 위와 같은 문제를 급하게 해결하기 위해 EAGER를 썼지만, 추후 리팩토링 예정.
     @JsonBackReference
     @OneToMany(mappedBy = "board", cascade = {CascadeType.ALL})
     private List<Likelist> likeList = new ArrayList<>();
@@ -48,6 +45,11 @@ public class Board extends Timestamped{
     // 게시글 생성자
     @Builder
     public Board (String username, String imageUrl, String grid, String content) {
+        Assert.hasText(username, "유저네임은 공란일 수 없습니다.");
+        Assert.hasText(imageUrl, "이미지 주소는 공란일 수 없습니다.");
+        Assert.hasText(grid, "그리드는 공란일 수 없습니다.");
+        Assert.hasText(content, "내용은 공란일 수 없습니다.");
+        
         this.username = username;
         this.imageUrl = imageUrl;
         this.grid = grid;

@@ -19,12 +19,11 @@ public class BoardResponseDto {
     private String grid;
     private Long likeCount;
     private LocalDateTime createdAt;
-//    private boolean isLike;
     private List<LikeResponseDto> likes;
 
     @Builder
     public BoardResponseDto(Long boardId, String creater, String content,
-            String imageUrl, String grid, Long likeCount, boolean isLike
+            String imageUrl, String grid, Long likeCount
             ,LocalDateTime createdAt, List<LikeResponseDto> likes){
         this.boardId = boardId;
         this.creater = creater;
@@ -32,7 +31,6 @@ public class BoardResponseDto {
         this.imageUrl = imageUrl;
         this.grid = grid;
         this.likeCount = likeCount;
-//        this.isLike = isLike; << 특이하게 build 하지 않아도 값이 false로 들어간다?
         this.createdAt = createdAt;
         this.likes = likes;
     }

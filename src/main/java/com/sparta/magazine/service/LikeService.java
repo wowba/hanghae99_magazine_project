@@ -1,30 +1,22 @@
 package com.sparta.magazine.service;
 
 import com.sparta.magazine.dto.LikeRequestDto;
-import com.sparta.magazine.exception.ErrorCodeException;
 import com.sparta.magazine.model.Board;
 import com.sparta.magazine.model.Likelist;
 import com.sparta.magazine.model.User;
-import com.sparta.magazine.repository.BoardRepository;
 import com.sparta.magazine.repository.LikelistRepository;
-import com.sparta.magazine.repository.UserRepository;
 import com.sparta.magazine.validator.LikeValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
-
-import static com.sparta.magazine.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
 public class LikeService {
 
-    private final BoardRepository boardRepository;
     private final LikelistRepository likelistRepository;
-    private final UserRepository userRepository;
     private final LikeValidator likeValidator;
 
     // 좋아요 생성하기

@@ -2,7 +2,7 @@ package com.sparta.magazine.model;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import io.jsonwebtoken.lang.Assert;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,10 +16,8 @@ import java.util.stream.Collectors;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder // 언젠가 지우기.
 public class User extends Timestamped implements UserDetails {
 
     @Id
@@ -48,9 +46,13 @@ public class User extends Timestamped implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL})
     private List<Likelist> likeList = new ArrayList<>();
 
-    // 게시글 생성자 // 수정필요!!!!
     @Builder
     public User(String email, String username, String password, List<String> roles) {
+        // 일단은 추가해 보았지만, 미리 유효성 검사를 걸어놔서 큰 의미는 없는 코드.
+        Assert.hasText(email, "이메일은 공란일 수 없습니다.");
+        Assert.hasText(username, "유저네임은 공란일 수 없습니다.");
+        Assert.hasText(password, "비밀번호는 공란일 수 없습니다.");
+
         this.email = email;
         this.username = username;
         this.password = password;

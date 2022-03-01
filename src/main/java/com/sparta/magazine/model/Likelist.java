@@ -4,14 +4,11 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 public class Likelist {
 
