@@ -13,6 +13,7 @@ import com.sparta.magazine.repository.LikelistRepository;
 import com.sparta.magazine.repository.UserRepository;
 import com.sparta.magazine.validator.BoardValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,6 +39,7 @@ public class BoardService {
 
     // 전체 게시판 불러오기
     @Transactional
+//    @Cacheable("board")
     public ResponseEntity<GetMultiBoard> getAllBoard(int page, int size, String sortBy){
 
         // 모든 게시글 가져오기 (무한스크롤 적용)
@@ -49,9 +51,6 @@ public class BoardService {
 
         boolean isLast = boardList.isLast();
         boolean isFirst = boardList.isFirst();
-
-        // 모든 게시글 가져오기 (무한스크롤 미적용)
-//        List<Board> boardList = boardRepository.findAll();
 
         // 게시글을 반환해서 저장할 리스트
         List<BoardResponseDto> boardResponseDtos = new ArrayList<>();
@@ -86,12 +85,12 @@ public class BoardService {
             boardResponseDtos.add(boardResponseDto);
         }
 
-//        return boardResponseDtos; // 무한스크롤 없는 버전 용
         return new ResponseEntity<>(new GetMultiBoard("success", "모든 게시판 가져오기 성공", boardResponseDtos, isFirst, isLast), HttpStatus.OK);
     }
 
     // 상세 게시판 불러오기
     @Transactional
+    @Cacheable(value = "board", key = "#id")
     public BoardResponseDto getBoard(Long id){
 
         // 게시글 정보 가져오기
